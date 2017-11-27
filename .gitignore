@@ -1,0 +1,17 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+/.idea/workspace.xml
+/.idea/libraries
+bash.exe.stackdump
+/gradle
+gradlew
+gradlew.bat
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+import-summary.txt
+/app/app-release.apk
+/app/app-release
