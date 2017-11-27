@@ -2,7 +2,12 @@ package com.silion.circlemenu;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.silion.circlemenu.widget.CircleMenuLayout;
@@ -33,7 +38,8 @@ public class MainActivity extends Activity {
         // 初始化圆形菜单
         mCircleMenuLayout = (CircleMenuLayout) findViewById(R.id.cml);
         // 设置菜单数据项
-        mCircleMenuLayout.setMenuItemIconsAndTexts(mItemImgs, mItemTexts);
+//        mCircleMenuLayout.setMenuItemIconsAndTexts(mItemImgs, mItemTexts);
+        mCircleMenuLayout.setAdapter(new CircleMenuAdapter());
         // 设置菜单项点击事件
         mCircleMenuLayout.setOnMenuClickListener(new CircleMenuLayout.OnMenuClickListener() {
             @Override
@@ -41,5 +47,38 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, mItemTexts[position], Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    class CircleMenuAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return mItemTexts.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mItemTexts[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View itemView = inflater.inflate(R.layout.circle_menu_item, parent, false);
+            initMenuItem(itemView, position);
+            return itemView;
+        }
+
+        private void initMenuItem(View itemView, int position) {
+            ImageView ivIcon = (ImageView) itemView.findViewById(R.id.ivIcon);
+            ivIcon.setImageResource(mItemImgs[position]);
+            TextView tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+            tvTitle.setText(mItemTexts[position]);
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.silion.circlemenu.R;
@@ -36,6 +37,7 @@ public class CircleMenuLayout extends ViewGroup {
     private int mMenuItemLayoutId = R.layout.circle_menu_item;
     // MenuItem 的点击事件接口
     private OnMenuClickListener mOnMenuClickListener;
+    private ListAdapter mAdapter;
 
     public CircleMenuLayout(Context context) {
         this(context, null);
@@ -167,17 +169,43 @@ public class CircleMenuLayout extends ViewGroup {
         buildMenuItems();
     }
 
+    // 设置Adapter
+    public void setAdapter(ListAdapter adapter) {
+        mAdapter = adapter;
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        if (mAdapter != null) {
+            buildMenuItems();
+        }
+        super.onAttachedToWindow();
+    }
+
     /**
      * 构建菜单项
      */
     private void buildMenuItems() {
         // 根据用户设置的参数，初始化menu item
-        for (int i = 0; i < mMenuItemCount; i++) {
-            View itemView = inflateMenuView(i);
-            // 初始化菜单项
-            initMenuItem(itemView, i);
-            addView(itemView);
+//        for (int i = 0; i < mMenuItemCount; i++) {
+//            View itemView = inflateMenuView(i);
+//            // 初始化菜单项
+//            initMenuItem(itemView, i);
+//            addView(itemView);
+//        }
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            View viewItem = mAdapter.getView(i, null, this);
+            final int position = i;
+            viewItem.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnMenuClickListener.onClick(v, position);
+                }
+            });
+            addView(viewItem);
         }
+
+
     }
 
     private void initMenuItem(View itemView, int childIndex) {
